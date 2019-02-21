@@ -1,0 +1,25 @@
+<%= form_for(@project) do |f| %>
+
+    <% if @project.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(@project.errors.count, "error") %></h2>
+
+          <ul>
+            <% @project.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+
+    <%= f.label "Nom du projet" ,:class=>"label-form" %>
+    <%= f.text_field :name,:class=>"input-form" %>
+
+    <%= f.label "Fichier",:class=>"label-form" %>
+    <%= f.file_field :fichier %>
+
+    <%= f.hidden_field :user_id, :value => current_user.id %>
+
+    <%= f.submit "Créer", class: "bouton-standard",:style=>"margin-top:20px;margin-left:2px;" %>
+
+<% end %>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="Rails korectera: development" uuid="dc00e915-d781-4e3c-a319-3ab94922c3f0">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+  <data-source name="Rails korectera: test" uuid="ff32f118-e173-4484-b31d-58337fc960e1">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+  <data-source name="Rails korectera: production" uuid="66729c2f-419c-4cb8-bfa0-81b241f27bfd">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+</component>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="Rails korectera: development" uuid="dc00e915-d781-4e3c-a319-3ab94922c3f0">
+      <user-name>root</user-name>
+    </data-source>
+    <data-source name="Rails korectera: test" uuid="ff32f118-e173-4484-b31d-58337fc960e1">
+      <user-name>root</user-name>
+    </data-source>
+    <data-source name="Rails korectera: production" uuid="66729c2f-419c-4cb8-bfa0-81b241f27bfd">
+      <user-name>korectera</user-name>
+      <user-password>df96df8fdf97df8adfefdfe4dffcdff1df8ddfe1dfe5dff8dfefdfe9dffedfefdff8dfebdff5dfeedfebdffedfebdfe8dfebdff9dfefdff5dffadfebdff9dff9dffddfe5dff8dfeedf8ddff7df8adf8fdf94</user-password>
+    </data-source>
+  </component>
+</project>

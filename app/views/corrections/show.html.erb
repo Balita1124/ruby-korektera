@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Avant:</strong>
+  <%= @correction.avant %>
+</p>
+
+<p>
+  <strong>Demande:</strong>
+  <%= @correction.demande %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @correction.description %>
+</p>
+
+<%= link_to 'Edit', edit_correction_path(@correction) %> |
+<%= link_to 'Back', corrections_path %>

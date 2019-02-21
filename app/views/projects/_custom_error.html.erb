@@ -1,0 +1,10 @@
+<button class="close-btn" onclick="closeCustomMessage();" title="Fermer">X</button><br>
+<!--<div style="color: red;border: 1px solid red; padding: 7px;margin-bottom: 5px">-->
+<div style="color: red">
+  Une erreur s'est produit (Verifier vos données)
+  <ul>
+    <% @correction.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+    <% end %>
+  </ul>
+</div>

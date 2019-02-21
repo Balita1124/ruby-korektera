@@ -1,0 +1,29 @@
+<span class="fa fa-icon" onclick="changePinState();" id="pin">o</span>
+<table class="corrections-tableau" border="1">
+  <tr>
+    <th>N°</th>
+    <th>Page</th>
+    <th>ligne</th>
+    <th>Précédent</th>
+    <th>Demandé</th>
+    <th>Action</th>
+    <th>Etat</th>
+    <th>Auteur</th>
+  </tr>
+  <% @corrections.each do |correction| %>
+      <tr>
+        <input type="hidden" class="my_rangy" value="<%= correction.ligne %>">
+        <td class="donnees-min"><%= correction.id %></td>
+        <td class="donnees-min"><%= link_to correction.page, "", class: "link-orange", :onclick => "goToSpecificPage(#{correction.page});return false;" %></td>
+        <td class="donnees-min"><%= link_to correction.view_line, "", class: "link-orange", :onclick => "goToSpecificLine(#{correction.page},'#{correction.ligne}');return false;" %></td>
+        <td class="donnees-mid"><%= link_to correction.avant, edit_correction_path(correction), :onclick => "goToSpecificWord(#{correction.page},'#{correction.ligne}',#{correction.action});", :remote => true, class: "link-orange" %></td>
+        <td><%= correction.demande.html_safe %></td>
+        <td class="donnees-mid"><%= actionName(correction.action) %></td>
+        <td><%= etatName(correction.etat) %></td>
+        <td><%= prenom(correction.user_id) %></td>
+      </tr>
+  <% end %>
+</table>
+<%= custom_will_paginate @corrections, :style => 'color:#075769',
+                         :params => {:controller => 'projects', :action => 'show'},
+                         :remote => true %>

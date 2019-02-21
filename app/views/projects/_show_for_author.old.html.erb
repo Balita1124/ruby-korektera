@@ -1,0 +1,434 @@
+<div id="pdf_space">
+  <div class="pdf_controller">
+    <input type="text" name="num_page" id="find_page" style="width: 35px">
+    <button id="find" class="pdf-btn" onclick="find_page()">Aller</button>
+    &nbsp; &nbsp;
+    <button id="prev" class="pdf-btn"> <<</button>
+    <button id="next" class="pdf-btn"> >></button>
+    &nbsp; &nbsp;
+    <span class="numero">Page: <span id="page_num"></span> sur <span id="page_count"></span></span>
+  </div>
+
+  <div id="pdfContainer" class="pdf-content" onclick="hide_list();eclairer_action();" oncontextmenu="afficher_action();return false;">
+  </div>
+</div>
+<div id="formulaire">
+  <select id="actions">
+    <option value="modification"
+            <% check_action(@correction, 'modification') %> >Modification
+    </option>
+    <option value="suppression"
+            <% check_action(@correction, 'suppression') %>>Suppression
+    </option>
+    <option value="insertion"
+            <% check_action(@correction, 'insertion') %>>Insertion
+    </option>
+    <option value="remplacement"
+            <% check_action(@correction, 'remplacement') %>>Remplacement
+    </option>
+    <option value="commentaire"
+            <% check_action(@correction, 'commentaire') %>>Commentaire
+    </option>
+  </select>
+
+  <div id="form">
+    <%= render 'form_for_author' %>
+  </div>
+</div>
+<div id="corrections-spaces">
+  <a href="#" id="pin">pin</a>
+  <%= render "corrections/corrections" %>
+</div>
+<div id="corrections-list-btn">
+  Liste des corrections (Moi / total : <%= @corrections_mines %> / <%= @corrections_all %>)
+</div>
+<script>
+    window.onload = function () {
+        var serializerModule = rangy.modules.Serializer;
+    }
+    var cat = 0;
+    var mouseX;
+    var mouseY;
+    $(document).mousemove(function (e) {
+        mouseX = e.pageX;
+        mouseY = e.pageY;
+        eclairer_action();
+    });
+    $("#corrections-list-btn").on('click', function () {
+        $("#corrections-spaces").slideToggle("slow");
+    });
+    $(document).keyup(function (e) {
+        if (e.keyCode == 27) {
+            $("#corrections-spaces").hide("slow");
+        }
+    });
+    $("#actions").on("change", function () {
+        $('#correction_action').val($("#actions").val());
+    });
+    function manageSelection(cat) {
+        if (window.getSelection) {
+            var selectionRange = window.getSelection();
+            var selectionTexte = selectionRange.toString();
+            if (!(selectionTexte === "")) {
+                var num = $('#page_num').text();
+                $('#correction_avant').val(selectionRange.toString());
+                $('#correction_page').val(num);
+
+//                $('#correction_ligne').val(rangy.serializeSelection(rangy.getSelection()));
+                var el = $(".textLayer")[0];
+                $('#correction_ligne').val(rangy.serializeSelection(null, false, el));
+
+//                var range = selectionRange.getRangeAt(0);
+//                document.designMode = "on";
+//                if (range) {
+//                    selectionRange.removeAllRanges();
+//                    selectionRange.addRange(range);
+//                }
+//
+//                // Colorize text
+//                var my_color = [];
+//                my_color[0]="yellow";
+//                my_color[1]="red";
+//                my_color[2]="green";
+//                my_color[3]="gray";
+//                my_color[4]="grey";
+//                document.execCommand("BackColor", false, my_color[cat]);
+//                document.execCommand("ForeColor", false, "black");
+//                // Set design mode to off
+//                document.designMode = "off";
+
+                setChoice(cat);
+            }
+        }
+    }
+
+
+    /***
+     * Fonction qui permet de deserialiser un selection
+     * cette fonction prend comme argument le code de la selection et l'element conteneur de la selection
+     * @param value
+     * @param element
+     */
+
+    function deserializeSelection(value, element) {
+        rangy.deserializeSelection(value, element);
+    }
+
+
+    /***
+     * Fonction qui permet de coloriser une selection
+     * @param value
+     * @param action
+     */
+//    function colorThem(value, action) {
+//        console.log("value");
+//        var element = $(".textLayer")[0];
+//        rangy.deserializeSelection(value);
+//    }
+    function colorThem(value, action, page) {
+        var current_page = $("#page_num").html();
+        if (page != current_page) {
+            alert("page: " + current_page + ". Veuillez allez dans la page " + page + " avant de cliquer la correction");
+            return false;
+        }
+        var element = $(".textLayer")[0];
+        rangy.deserializeSelection(value, element);
+
+        var selectionRange = window.getSelection();
+        var range = selectionRange.getRangeAt(0);
+        document.designMode = "on";
+        if (range) {
+            selectionRange.removeAllRanges();
+            selectionRange.addRange(range);
+        }
+        // Colorize text
+        var my_color = [];
+        my_color['modification'] = "yellow";
+        my_color['suppression'] = "red";
+        my_color['insertion'] = "green";
+        my_color['remplacement'] = "gray";
+        my_color['commentaire'] = "grey";
+        document.execCommand("BackColor", false, my_color[action]);
+        document.execCommand("ForeColor", false, "black");
+        // Set design mode to off
+        document.designMode = "off";
+        selectionRange.removeAllRanges();
+
+    }
+
+    /***
+     * Function qui permet de gerer les range
+     * */
+    function rangyManage() {
+        deserializeSelection($("#correction_ligne").val());
+        var action = $("#correction_action").val();
+        var selectionRange = window.getSelection();
+        var range = selectionRange.getRangeAt(0);
+        document.designMode = "on";
+        if (range) {
+            selectionRange.removeAllRanges();
+            selectionRange.addRange(range);
+        }
+        // Colorize text
+        var my_color = [];
+        my_color[0] = "yellow";
+        my_color[1] = "red";
+        my_color[2] = "green";
+        my_color[3] = "gray";
+        my_color[4] = "grey";
+        document.execCommand("BackColor", false, my_color[action]);
+        document.execCommand("ForeColor", false, "black");
+        // Set design mode to off
+        document.designMode = "off";
+    }
+
+    /***
+     * Function qui permet de cacher le menu action
+     */
+//    function hide_action() {
+//        $("#actions").hide();
+//    }
+    function annuler() {
+        $("#correction_avant").val("");
+        $("#correction_demande").val("");
+        $("#correction_ligne").val("");
+        $("#correction_description").val("");
+
+        $("input[name='correction[action]'][value='modification']").prop('checked', true);
+        $("label[for='Modification']").addClass("active");
+        $("label[for='Suppression']").removeClass("active");
+        $("label[for='Insertion']").removeClass("active");
+        $("label[for='Remplacement']").removeClass("active");
+        $("label[for='Commentaire']").removeClass("active");
+//        $("#correction_avant").prop("disabled", "false").css("pointer", "pointer");
+    }
+    /***
+     * Fonction qui permet d'afficher le menu action
+     */
+    //    function afficher_action() {
+    //        if (window.getSelection) {
+    //            var selectionRange = window.getSelection();
+    //            var selectionTexte = selectionRange.toString();
+    //            if (!(selectionTexte === "")) {
+    //                $("#actions").css({'top': mouseY, 'left': mouseX}).show();
+    //            }
+    //        }
+    //    }
+
+    /***
+     * Fonction qui permet d'eclairer le menu action sur la droite
+     */
+    function eclairer_action() {
+        if (window.getSelection) {
+            var selectionRange = window.getSelection();
+            var selectionTexte = selectionRange.toString();
+            if (!(selectionTexte === "")) {
+                $("#actions").css("border", "8px solid #074455");
+//                $("#action-buttons").css("background-color", "#cdffcd");
+            } else {
+                $("#actions").css("border", "1px solid #074455");
+            }
+        }
+    }
+
+    /***
+     * Fonction qui permet de definir le type d'action selectionné
+     * elle prend comme argument le numero de l'action
+     * @param n
+     */
+    function manageAction(cat) {
+//        $("#actions").hide();
+        manageSelection(cat);
+    }
+</script>
+<script>
+    var pdfDoc = null,
+            pageNum = 1,
+            pageRendering = false,
+            pageNumPending = null,
+            scale = 1.2;
+    var url = "";
+    $(function () {
+        <% if !@project.nil? && !@project.fichier.nil? && !@project.fichier.url.nil? %>
+        url = "<%= @project.fichier.url %>";
+        loadPdf(url);
+        <% end %>
+    });
+
+    function loadPdf(url) {
+        PDFJS.disableWorker = true;
+        PDFJS.getDocument(url).then(function (pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            $('#page_count').text(pdfDoc.numPages);
+            $('#page_num').text(pageNum);
+
+            renderPage(pageNum);
+        });
+    }
+    function renderPage(num) {
+        $("#find_page").val(pageNum)
+        pageRendering = false;
+        // Using promise to fetch the page
+        pdfDoc.getPage(num).then(function (page) {
+            var viewport = page.getViewport(scale);
+            var $canvas = jQuery("<canvas></canvas>");
+
+            var canvas = $canvas.get(0);
+            var context = canvas.getContext("2d");
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            var $pdfContainer = jQuery("#pdfContainer");
+            $pdfContainer.html("");
+            $pdfContainer.css("height", canvas.height + "px").css("width", canvas.width + "px");
+            $pdfContainer.append($canvas);
+
+            var outputScale = getOutputScale();
+            if (outputScale.scaled) {
+                var cssScale = 'scale(' + (1 / outputScale.sx) + ', ' +
+                        (1 / outputScale.sy) + ')';
+                CustomStyle.setProp('transform', canvas, cssScale);
+                CustomStyle.setProp('transformOrigin', canvas, '0% 0%');
+
+                if ($textLayerDiv.get(0)) {
+                    CustomStyle.setProp('transform', $textLayerDiv.get(0), cssScale);
+                    CustomStyle.setProp('transformOrigin', $textLayerDiv.get(0), '0% 0%');
+                }
+            }
+            context._scaleX = outputScale.sx;
+            context._scaleY = outputScale.sy;
+            if (outputScale.scaled) {
+                context.scale(outputScale.sx, outputScale.sy);
+            }
+
+            var canvasOffset = $canvas.offset();
+            var $textLayerDiv = jQuery("<div />")
+                    .addClass("textLayer")
+                    .css("height", viewport.height + "px")
+                    .css("width", viewport.width + "px")
+                    .offset({
+                        top: canvasOffset.top,
+                        left: canvasOffset.left
+                    });
+
+//
+            var $marginDiv = jQuery("<div />")
+                    .addClass("margin-div")
+                    .css("height", "50px");
+
+//
+            $pdfContainer.append($textLayerDiv);
+            $pdfContainer.append($marginDiv);
+
+            page.getTextContent().then(function (textContent) {
+                //var textLayer = new TextLayerBuilder($textLayerDiv.get(0), 0); //The second zero is an index identifying
+                var textLayer = new TextLayerBuilder($textLayerDiv.get(0), pageNum - 1); //The second zero is an index identifying
+                //the page. It is set to page.number - 1.
+                textLayer.setTextContent(textContent);
+
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport,
+                    textLayer: textLayer
+                };
+
+                var renderTask = page.render(renderContext);
+                renderTask.promise.then(function () {
+                    pageRendering = false;
+                    if (pageNumPending !== null) {
+                        // New page rendering is pending
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+
+            // Render PDF page into canvas context
+            var renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+        });
+        $('#page_num').text(pageNum);
+    }
+
+    function find_page() {
+        var num_page = $("#find_page").val();
+        if (isNaN(num_page)) {
+            $("#find_page").val("")
+            return false;
+        } else {
+            pageNum = num_page;
+            loadPdf(url);
+        }
+    }
+
+    function goto_page(num) {
+        pageNum = num;
+        loadPdf(url);
+    }
+    function queueRenderPage(num) {
+        if (pageRendering) {
+            pageNumPending = num;
+        } else {
+            loadPdf(url);
+        }
+    }
+
+    /**
+     * Displays previous page.
+     */
+    function onPrevPage() {
+        if (pageNum <= 1) {
+            return;
+        }
+        pageNum--;
+        queueRenderPage(pageNum);
+    }
+    $('#prev').on('click', onPrevPage);
+
+    /**
+     * Displays next page.
+     */
+    function onNextPage() {
+        if (pageNum >= pdfDoc.numPages) {
+            return;
+        }
+        pageNum++;
+        queueRenderPage(pageNum);
+    }
+    $('#next').on('click', onNextPage);
+
+</script>
+<script>
+    var area;
+
+    function toggleArea() {
+        area = new nicEditor({fullPanel: true}).panelInstance('correction_demande', {hasPanel: true});
+//            area.removeInstance('correction_demande');
+    }
+
+    bkLib.onDomLoaded(function () {
+        toggleArea();
+    });
+</script>
+<script>
+    /*Concerne les div de la liste des corrections*/
+    var etat_pin = false;
+
+    $("#pin").on("click", function () {
+        if (etat_pin == false) {
+            etat_pin = true;
+        } else {
+            etat_pin = false;
+        }
+    });
+
+    function hide_list() {
+        if (etat_pin == true) {
+            $("#corrections-spaces").hide("slow");
+        }
+    }
+
+
+</script>

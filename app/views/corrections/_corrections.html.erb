@@ -1,0 +1,5 @@
+<% if current_user.groupe == 1 %>
+    <%= render 'corrections/corrections_mcm' %>
+<% elsif current_user.groupe == 2 %>
+    <%= render 'corrections/corrections_auteur' %>
+<% end %>

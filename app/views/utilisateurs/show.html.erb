@@ -1,0 +1,36 @@
+<% provide(:title, 'Mes statistiques') %>
+
+<div class="principal">
+  <table class="tableau">
+    <tr class="titre">
+      <td style="width: 150px">Projets</td>
+      <td style="width: 250px">
+           <%= correction_title %>
+      </td>
+      <td style="width: 150px">Corrections du projet</td>
+      <td style="width: 150px">Pourcentage sur le projet</td>
+      <td style="width: 100px"></td>
+    </tr>
+    <% @corrections.each do |correction| %>
+        <tr class="donnees">
+          <td><%= link_to correction.project.name, project_path(correction.project), :class => "link" %></td>
+          <td>
+            <%= nb_corretions(correction.project.id) %>
+          </td>
+          <td>
+            <%= nb_tous_correction_par_projet(correction.project.id) %>
+          </td>
+          <td>
+            <%= pourcentage_corretion_par_project(correction.project.id) %> % <span style="display: inline-block;width: 100px;height: 25px;border:1px solid black;vertical-align: top"><span style="<%= check_pourcentage(correction.project.id) %>"></span></span>
+          </td>
+        </tr>
+    <% end %>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>
+      </td>
+    </tr>
+  </table>
+</div>

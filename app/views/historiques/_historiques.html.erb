@@ -1,0 +1,21 @@
+<table class="tableau">
+  <tr class="titre">
+    <td style="width: 150px">Action</td>
+    <td style="width: 150px">Projet</td>
+    <td style="width: 75px">Correction</td>
+    <td style="width: 175px">Date</td>
+    <td style="width: 100px">Utilisateur</td>
+  </tr>
+  <% @historiques.each do |historique| %>
+      <tr class="donnees">
+        <td><%= historique.action %></td>
+        <td><%= project_name(historique.project) %></td>
+        <td><%= historique.correction %></td>
+        <td><%= historique.updated_at.strftime("%d %b %Y à %Hh%M") %></td>
+        <td><%= historique.user.nom %></td>
+      </tr>
+  <% end %>
+</table>
+<%= custom_will_paginate @historiques, :style => 'color:#075769',
+                         :params => {:controller => 'historiques', :action => 'index'},
+                         :remote => true %>

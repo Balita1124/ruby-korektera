@@ -1,0 +1,31 @@
+<div class="col-lg-3 col-md-3 hidden-sm hidden-xs"></div>
+<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+      <h1><%= "#{current_user.prenom.capitalize} #{current_user.nom.upcase}" %></h1>
+      <h5>(<%= groupe(current_user.id) %>)</h5>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-left" style="margin-top: 75px;">
+      <h3>Sessions</h3>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" style="margin-top: 25px;">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-left">
+          <table class="table table-responsive table-bordered">
+            <tr>
+              <th>Projet</th>
+              <th>Date</th>
+            </tr>
+            <% @sesses.each do |sesse| %>
+                <tr>
+                  <td><%= link_to sesse.project.name, sess_path(sesse.id), :class=>"link" %></td>
+                  <td><%= sesse.updated_at.strftime("%d %b %Y à %Hh %M")  %></td>
+                </tr>
+            <% end %>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-lg-3 col-md-3 hidden-sm hidden-xs"></div>

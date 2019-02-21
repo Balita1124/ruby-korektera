@@ -1,0 +1,29 @@
+<%= form_for @correction, :remote => true do |f| %>
+    <div style="display: block">
+      <div style="display: inline-block;vertical-align: top;">
+        <%= f.label "Texte avant correction" %>
+        <%= f.text_area :avant, :class => "div_look_alike", :readonly => "readonly", :style => "width: 300px" %>
+        <%= f.label "Ligne:" %>
+        <%= f.text_field :view_line, :class => "div_look_alike", :readonly => "readonly" %>
+      </div>
+      <div style="display: inline-block;vertical-align: top;margin-left: 20px;">
+        <%= f.label "Correction demandée" %>
+        <%= f.text_area :demande, :style => "height: 100px;width:300px" %>
+      </div>
+    </div>
+    <%= f.label "Description" %>
+    <%= f.text_area :description, :style => "height: 100px;width:300px" %>
+    <!--hidden-->
+    <input type="hidden" name="cat" id="cat">
+    <%= f.hidden_field :project_id, :value => @project.id %>
+    <%= f.hidden_field :user_id, :value => current_user.id %>
+    <%= f.hidden_field :action, :value => 2 %>
+    <%= f.hidden_field :etat, :value => 0 %>
+    <%= f.hidden_field :ligne %>
+    <%= f.hidden_field :page %>
+    <%= f.submit "Valider", :class => "bouton-standard", :style => "margin-top:20px" %>
+    <%= link_to "Annuler", @project, :class => "link-btn-standard", :style => "margin-top:5px" %>
+    <div id="subim-btn">
+
+    </div>
+<% end %>

@@ -1,0 +1,30 @@
+<span class="fa fa-icon" onclick="changePinState();" id="pin">o</span>
+<table class="corrections-tableau" border="1">
+  <tr>
+    <th>N°</th>
+    <th>Page</th>
+    <th>ligne</th>
+    <th>Précédent</th>
+    <th>Demandé</th>
+    <th>Action</th>
+    <th></th>
+  </tr>
+  <% @corrections.each do |correction| %>
+      <tr>
+        <td class="donnees-min"><%= correction.id %></td>
+        <input type="hidden" class="my_rangy" value="<%= correction.ligne %>">
+        <td class="donnees-min"><%= link_to correction.page, "", class: "link-orange", :onclick => "goToSpecificPage(#{correction.page});return false;" %></td>
+        <td class="donnees-min"><%= link_to correction.view_line, "", class: "link-orange", :onclick => "goToSpecificLine(#{correction.page},'#{correction.ligne}');return false;" %></td>
+        <td class="donnees-max"><%= link_to correction.avant, edit_correction_path(correction),:onclick=>"goToSpecificWord(#{correction.page},'#{correction.ligne}');", :remote => true, class: "link-orange" %></td>
+        <td><%= correction.demande.html_safe %></td>
+        <td class="donnees-mid"><%= actionName(correction.action) %></td>
+        <td>
+          <!--<%= link_to "M", edit_correction_path(correction), :remote => true, class: "link-orange" %>-->
+          <%= link_to "S", correction, method: :delete,class: "link-orange", :remote => true, data: {confirm: 'Vous etes sur?'} %>
+        </td>
+      </tr>
+  <% end %>
+</table>
+<%= custom_will_paginate @corrections, :style => 'color:#075769',
+                         :params => {:controller => 'projects', :action => 'show'},
+                         :remote => true %>

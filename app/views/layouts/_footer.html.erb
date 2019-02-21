@@ -1,0 +1,54 @@
+<div class="footer" onclick="showAPropos()">
+  A propos de ICA
+</div>
+<div id="a-propos" style="display: none">
+  ICA est un outil qui permet de corriger des livres. etc...
+  ICA est un outil qui permet de corriger des livres. etc...
+  ICA est un outil qui permet de corriger des livres. etc...
+  ICA est un outil qui permet de corriger des livres. etc...
+  ICA est un outil qui permet de corriger des livres. etc...
+</div>
+<!--Script qui permet de gerer la fonctionnalité à propos-->
+<script>
+    function showAPropos(){
+        $('#a-propos').slideToggle();
+    }
+</script>
+<script>
+    function closeCustomMessage() {
+        $("#custom_message").hide();
+    }
+</script>
+<!-- Script concernant la liste des corrections -->
+<script>
+    var etat_pin = false;
+
+    function changePinState(){
+        etat_pin = etat_pin ? false : true;
+        setTextPin(etat_pin);
+    }
+
+    function setTextPin(etat) {
+        var color_pin = etat ? "green" : "gray";
+        var text_pin = etat ? "O" : "o";
+        $("#pin").css("color", color_pin);
+        $("#pin").text(text_pin);
+    }
+
+    function hide_list() {
+        if (etat_pin == false) {
+            $("#corrections-spaces").hide("slow");
+        }
+    }
+
+    $("#corrections-list-btn").on('click', function () {
+        $("#corrections-spaces").slideToggle("slow");
+    });
+
+    $(document).keyup(function (e) {
+        if (e.keyCode == 27) {
+            $("#corrections-spaces").hide("slow");
+        }
+    });
+
+</script>

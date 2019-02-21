@@ -1,0 +1,84 @@
+
+
+
+
+ /*CSS classes used by TextLayerBuilder to style the text layer divs*/
+
+ /*This stuff is important! Otherwise when you select the text, the text in the divs will show up!*/
+
+
+.pdf_controller{
+    background-color: white;
+    border-bottom: 1px solid #074455;
+    left: 25px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    position: fixed;
+    top: 75px;
+    width: 735px;
+    z-index: 1000;
+    margin-bottom: 15px;
+}
+.pdf_controller .pdf-btn{
+    display: inline-block;
+    background-color: #076379;
+    color: #e7e7e7;
+    padding: 4px 7px 4px 7px;
+    text-align: center;
+    margin-left: 10px;
+    border: 1px solid #07566a;
+    font-size:14px;
+    font-weight: bolder;
+    cursor: pointer;
+}
+.pdf_controller .pdf-btn:hover{
+    background-color: #074455;
+    color: white;
+    border: 1px solid #074455;
+}
+.pdf_controller .numero{
+    color: #074455;
+    font-size: 13px;
+    font-weight: bolder;
+}
+.pdf_controller .numero:hover{
+    color: #073443;
+}
+.pdf_controller #find_page{
+    border: 1px solid #073443;
+    color: #09495c;
+    font-size: 14px;
+    height: 27px;
+    text-align: center;
+    width: 47px !important;
+}
+.pdf_controller #find_page:focus,.pdf_controller #find_page::-moz-focus-inner{
+    border: 1px solid #06242f;
+    color: #093846;
+}
+
+ .action-btn{
+     display: inline-block;
+     /*background-color: #076379;*/
+     /*color: #e7e7e7;*/
+     padding: 4px 7px 4px 7px;
+     text-align: center;
+     margin-left: 10px;
+     /*border: 1px solid #07566a;*/
+     font-size:14px;
+     font-weight: bolder;
+     cursor: pointer;
+     background-color: #074455;
+     color: #f0f0f0;
+     border: 1px solid #074455;
+ }
+ .action-btn:hover{
+     background-color: #073546;
+     color: #ffffff;
+     border: 1px solid #074455;
+ }
+ .action-btn-active{
+     background-color: #5BF0FF !important;
+     color: #073546 !important;
+     border: 1px solid #5BF0FF !important;
+ }

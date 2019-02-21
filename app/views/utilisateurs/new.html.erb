@@ -1,0 +1,30 @@
+<div id="inscription-form">
+
+  <%= form_for(@utilisateur, url: utilisateurs_path) do |f| %>
+
+      <%= f.label "Nom" %>
+      <%= f.text_field :nom, :placeholder=>"Nom" %>
+
+      <%= f.label "Prenom" %>
+      <%= f.text_field :prenom, :placeholder=>"Prenom" %>
+
+      <%= f.label "Groupe" %>
+
+      <select name="user[groupe]" >
+        <option value="1">MCM</option>
+        <option value="2">AUTEUR</option>
+      </select>
+
+      <%= f.label :email %>
+      <%= f.email_field :email, :placeholder=>"Email" %>
+
+      <%= f.label "Mot de passe" %>
+      <% if @minimum_password_length %>
+          <em>(<%= @minimum_password_length %> characters minimum)</em>
+      <% end %>
+      <br/>
+      <%= f.password_field :password, :placeholder=>"Mot de passe", autocomplete: "off" %>
+
+      <%= f.submit "S'inscrire", :class => "bouton-standard" %>
+  <% end %>
+</div>

@@ -1,0 +1,16 @@
+<% provide(:title, 'Mes sessions') %>
+
+<div class="principal">
+  <table class="tableau">
+    <tr class="titre">
+      <td style="width: 150px">Projet</td>
+      <td style="width: 175px">Date</td>
+    </tr>
+    <% @sesses.each do |sesse| %>
+        <tr class="donnees">
+          <td><%= link_to sesse.project.name, sess_path(sesse.id), :class => "link" %></td>
+          <td><%= sesse.updated_at.strftime("%d %b %Y à %Hh %M") %></td>
+        </tr>
+    <% end %>
+  </table>
+</div>

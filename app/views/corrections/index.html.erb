@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Corrections</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Avant</th>
+      <th>Demande</th>
+      <th>Description</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @corrections.each do |correction| %>
+      <tr>
+        <td><%= correction.avant %></td>
+        <td><%= correction.demande %></td>
+        <td><%= correction.description %></td>
+        <td><%= link_to 'Show', correction %></td>
+        <td><%= link_to 'Edit', edit_correction_path(correction) %></td>
+        <td><%= link_to 'Destroy', correction, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Correction', new_correction_path %>

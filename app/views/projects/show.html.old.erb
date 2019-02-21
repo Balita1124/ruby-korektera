@@ -1,0 +1,92 @@
+<% provide(:title, @project.name) %>
+<div class="row" style="margin-top: 10px;">
+  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+    <iframe id="cv_iframe" src="<%= @project.fichier.url %>" height="680" width="680" onclick='sayHello()'></iframe>
+  </div>
+  <div class="col-lg-6 col-md-6 col-sm-12 col-lg-12">
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-6 col-lg-6 text-left">
+        <b>Dossier:</b><%= @project.name %>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-6 col-lg-6 text-center">
+        <%= image_tag "pdp.jpg", style: "height: 50px; width:60px" %>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-12 col-lg-12 text-right" style="margin-top: 25px; min-height: 400px">
+        <div class="row">
+          <div class="col-lg-2 col-md-2 col-sm-2 col-lg-2">
+            <div class="row">
+              <div class="col-lg-12 text-left"><strong>Action</strong></div>
+              <div class="col-md-12 text-left" style="list-style: none; border: 1px solid black;margin-left: 15px;margin-top: 10px;padding-bottom: 5px;">
+                <div class="row">
+                  <div class="col-lg-12" style="padding-top:5px; padding-bottom:5px; background-color: #40C7DB">Modification</div>
+                  <div class="col-lg-12" style="margin-top:5px">Suppression</div>
+                  <div class="col-lg-12" style="margin-top:5px">Insertion</div>
+                  <div class="col-lg-12" style="margin-top:5px">Remplacement</div>
+                  <div class="col-lg-12" style="margin-top:5px">Commentaire</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-10 col-md-10 col-sm-10 col-lg-10">
+            <div class="row">
+              <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-left" style="padding-left: 50px; padding-right: 50px">
+                    <%= form_for(@correction) do |f| %>
+                        <div class="form-group">
+                          <%= f.label "Avant" %>
+                          <%= f.text_field :avant, class: "form-control", :style => "width: 200px" %>
+                        </div>
+                        <div class="form-group">
+                          <%= f.label "Texte demande" %>
+                          <%= f.text_area :demande, class: "form-control" %>
+                        </div>
+                        <div class="form-group">
+                          <%= f.label "Description" %>
+                          <%= f.text_area :description, class: "form-control" %>
+                        </div>
+                        <div class="form-group">
+                          <%= f.submit "Ajouter", class: "btn btn-default" %>
+                        </div>
+                    <% end %>
+                    <%= link_to 'Liste des projets', projects_path, class: "link" %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="corrections_space" class="col-lg-12 col-md-12 col-sm-12 col-lg-12 text-left" style="margin-top: 25px;max-height: 200px;overflow-y: scroll">
+        <%= render "corrections/corrections" %>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    function yourFunction() {
+        if (window.getSelection) {
+            var selectionRange = window.getSelection();
+            $('#correction_avant').val(selectionRange.toString());
+        }
+    }
+    function sayHello(){
+        alert("tafa");
+    }
+
+    //    $('#corps').click(function () {
+    ////        yourFunction();
+    //        alert("tafa");
+    //    });
+//    var iframe = $('#cv_iframe').contents();
+    var iframe = $('iframe')[0].contents();
+    iframe.click(function () {
+        alert("tafa");
+        //        yourFunction();
+    });
+    //    iframe.contents().click(function () {
+    //        alert("tafa");
+    ////        yourFunction();
+    //    });
+    //document.getElementById('cv_iframe').contentWindow.document.getElementById('viewerContainer')
+</script>

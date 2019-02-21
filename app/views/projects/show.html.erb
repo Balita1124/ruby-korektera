@@ -1,0 +1,6 @@
+<% provide(:title, @project.name) %>
+<% if current_user.groupe == 1 %>
+    <%= render 'show_for_mcm' %>
+<% elsif current_user.groupe == 2 %>
+    <%= render 'show_for_author' %>
+<% end %>

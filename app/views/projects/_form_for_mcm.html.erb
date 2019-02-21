@@ -1,0 +1,45 @@
+<%= form_for @correction, :remote => true do |f| %>
+    <div style="display: block">
+      <div style="display: inline-block;vertical-align: top;">
+        <%= f.label "Texte avant correction" %>
+        <%= f.text_area :avant, :class => "div_look_alike", :readonly => "readonly", :style => "width: 300px" %>
+        <%= f.label "Ligne:" %>
+        <%= f.text_field :view_line, :class => "div_look_alike", :readonly => "readonly" %>
+      </div>
+      <div style="display: inline-block;vertical-align: top;margin-left: 20px;">
+        <%= f.label "Correction demandée" %>
+        <%= f.text_area :demande, :style => "height: 100px;width:300px" %>
+      </div>
+    </div>
+    <div style="display: block">
+      <div style="display: inline-block;vertical-align: top;">
+        <%= f.label "Description" %>
+        <%= f.text_area :description, :style => "height: 100px;width:300px", :class => "div_look_alike", :readonly => "readonly" %>
+        <%= f.label "Etat:" %>
+        <select name="correction[etat]" style="display: block;height: 35px;">
+          <option value="0" <%= check_selected_action(@correction, 0) %> >En attente</option>
+          <option value="1" <%= check_selected_action(@correction, 1) %>>Corrigé</option>
+          <option value="2" <%= check_selected_action(@correction, 2) %>>Verifier</option>
+        </select>
+      </div>
+      <div style="display: inline-block;vertical-align: top;margin-left: 20px;">
+        <%= f.label "Commentaires" %>
+        <%= f.text_area :commentaires, :style => "height: 100px;width:300px" %>
+      </div>
+    </div>
+
+    <!--hidden-->
+    <input type="hidden" name="cat" id="cat">
+    <%= f.hidden_field :user_correcteur_id, :value => current_user.id %>
+    <%= f.submit "Valider", :class => "bouton-standard", :style => "margin-top:25px" %>
+    <%= link_to "Annuler", @project, :class => "link-btn-standard", :style => "margin-top:5px" %>
+    <div id="subim-btn">
+    </div>
+<% end %>
+<script>
+    document.addEventListener("pageRendered", function(e) {
+        $(".nicEdit-main").prop("contenteditable","false");
+        $(".nicEdit-main").addClass("div_look_alike");
+    });
+</script>
+

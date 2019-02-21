@@ -1,0 +1,364 @@
+<div id="pdf_space">
+  <div class="pdf_controller">
+    <input type="text" name="num_page" id="find_page" style="width: 35px">
+    <button id="find-btn" class="pdf-btn">Aller</button>
+    &nbsp; &nbsp;
+    <button id="prev" class="pdf-btn"> <<</button>
+    <button id="next" class="pdf-btn"> >></button>
+    &nbsp; &nbsp;
+    <span class="numero">Page: <span id="page_num"></span> sur <span id="page_count"></span></span>
+  </div>
+  <div id="list-action">
+    <button id="action-m" class="action-btn" onclick="manageAction(0)">M</button>
+    &nbsp; &nbsp;
+    <button id="action-s" class="action-btn" onclick="manageAction(1)">S</button>
+    &nbsp; &nbsp;
+    <button id="action-i" class="action-btn" onclick="manageAction(2)">I</button>
+    &nbsp; &nbsp;
+    <button id="action-r" class="action-btn" onclick="manageAction(3)">R</button>
+    &nbsp; &nbsp;
+    <button id="action-c" class="action-btn" onclick="manageAction(4)">C</button>
+    &nbsp; &nbsp;
+  </div>
+</div>
+<div id="conteneur" onclick="hide_list();notifyAction();" oncontextmenu="return false;">
+</div>
+<div id="formulaire">
+  <div class="form" id="form_for_mcm">
+    <%= render 'form_for_mcm' %>
+  </div>
+</div>
+<div id="corrections-spaces">
+  <%= render "corrections/corrections" %>
+</div>
+<div id="corrections-list-btn">
+  <%= render 'corrections/corrections_stat' %>
+</div>
+<!-- Script concernant les ranges -->
+<script>
+    $(function () {
+        var serializerModule = rangy.modules.Serializer
+    });
+    function selectionExist() {
+        if (window.getSelection) {
+            var selectionRange = window.getSelection();
+            var selectionTexte = selectionRange.toString();
+            if (!(selectionTexte === "")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    function getTextSelected() {
+        if (selectionExist()) {
+            var ourRange = window.getSelection();
+            var texte = ourRange.toString();
+            return texte;
+        } else {
+            return "";
+        }
+    }
+    function manageWord() {
+        console.log("####### start of manageWord() ######\n");
+        var numeroPage = $("#page_num").text();
+        var correctionDemande = "";
+        var elementArea = $(".textLayer")[0];
+        var numeroLigne = "";
+        var ligneAfficher = "";
+
+        if (selectionExist()) {
+            correctionDemande = getTextSelected();
+            numeroLigne = rangy.serializeSelection(null, false, elementArea)
+
+            ligneAfficher = numeroLigne.split('/')[1].split(':')[0];
+
+            //Affectaion
+            $('#correction_avant').val(correctionDemande);
+            $('#correction_page').val(numeroPage);
+            $('#correction_ligne').val(numeroLigne);
+            $('#correction_view_line').val(ligneAfficher);
+
+            console.log("numeroPage = " + numeroPage + "\n");
+            console.log("numeroLigne = " + numeroLigne + "\n");
+            console.log("ligneAfficher = " + ligneAfficher + "\n");
+            console.log("correctionDemande = " + correctionDemande + "\n");
+
+            console.log("####### end of  manageWord() ######\n");
+        }
+    }
+</script>
+<!-- Script concernant les actions-->
+<script>
+    function notifyAction() {
+        if (selectionExist()) {
+            $("#list-action").addClass("list-action-active");
+//                $("#action-buttons").css("background-color", "#cdffcd");
+        } else {
+            $("#list-action").removeClass("list-action-active");
+        }
+    }
+    function manageAction(action) {
+        return false;
+    }
+
+    function setAction(action) {
+        switch (action) {
+            case 0:
+            {
+                $("#action-m").addClass("action-btn-active");
+                $("#action-s,#action-i,#action-r,#action-c").removeClass("action-btn-active");
+                break;
+            }
+            case 1:
+            {
+                $("#action-s").addClass("action-btn-active");
+                $("#action-m,#action-i,#action-r,#action-c").removeClass("action-btn-active");
+                break
+            }
+            case 2:
+            {
+                $("#action-i").addClass("action-btn-active");
+                $("#action-m,#action-s,#action-r,#action-c").removeClass("action-btn-active");
+                break
+            }
+            case 3:
+            {
+                $("#action-r").addClass("action-btn-active");
+                $("#action-m,#action-i,#action-s,#action-c").removeClass("action-btn-active");
+                break
+            }
+            case 4:
+            {
+                $("#action-c").addClass("action-btn-active");
+                $("#action-m,#action-i,#action-r,#action-s").removeClass("action-btn-active");
+                break
+            }
+        }
+    }
+</script>
+<!--Script sur l'affichage du pdf-->
+<script type="text/javascript">
+    var pageNum = 1;
+    var pdfDoc = null;
+    var pageRendering = false;
+    var pageNumPending = null;
+
+    var url = "<%= @project.fichier.url %>";
+    $(function () {
+        loadPdf(url);
+    });
+
+    function loadPdf(url) {
+        PDFJS.getDocument(url).then(function (pdf) {
+            pdfDoc = pdf;
+//            console.dir(pdfDoc);
+            pageRendering = false;
+
+            var container = document.getElementById("conteneur");
+            $("#conteneur").html("Chargement")
+            pdf.getPage(pageNum).then(function (page) {
+//                alert("in get page");
+                var scale = 1.5;
+                var viewport = page.getViewport(scale);
+                var div = document.createElement("div");
+                div.setAttribute("id", "page-" + (page.pageIndex + 1));
+                div.setAttribute("style", "position: relative;");
+                container.innerHTML = "";
+                container.appendChild(div);
+                var canvas = document.createElement("canvas");
+                div.appendChild(canvas);
+
+                var context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+
+                page.render(renderContext)
+                        .then(function () {
+//                            alert("in render");
+                            return page.getTextContent();
+                        })
+                        .then(function (textContent) {
+                            pageRendering = false;
+//                            alert("in page rendering false");
+                            var textLayerDiv = document.createElement("div");
+                            textLayerDiv.setAttribute("class", "textLayer");
+                            textLayerDiv.setAttribute("style", "width:" + canvas.width + "px");
+                            div.appendChild(textLayerDiv);
+                            var numero = page.pageIndex;
+                            if (pageNumPending != null) {
+                                // New page rendering is pending
+                                numero = pageNumPending;
+
+                            }
+                            pageNumPending = null;
+//                            alert("in page num pending" +pageNumPending);
+                            var textLayer = new TextLayerBuilder({
+                                textLayerDiv: textLayerDiv,
+                                pageIndex: numero,
+                                viewport: viewport
+                            });
+                            textLayer.setTextContent(textContent);
+                            textLayer.render();
+                        });
+            });
+            $('#page_num').text(pageNum);
+            $("#find_page").val(pageNum);
+            $('#page_count').text(pdf.numPages);
+            $('#page_num').text(pageNum);
+        });
+    }
+    function queueRenderPage(num) {
+        if (pageRendering) {
+            pageNumPending = num;
+        } else {
+            loadPdf(url);
+        }
+    }
+    /**
+     * Displays previous page.
+     */
+    function onPrevPage() {
+        if (pageNum <= 1) {
+            return;
+        }
+        pageNum--;
+        queueRenderPage(pageNum);
+    }
+    $('#prev').on('click', onPrevPage);
+    $('#find-btn').on('click', onSpecificPage);
+
+    function onSpecificPage() {
+        var num = parseInt($("#find_page").val());
+        pageNum = num;
+        queueRenderPage(pageNum);
+    }
+    function goToSpecificPage(num) {
+        pageNum = num;
+        queueRenderPage(pageNum);
+    }
+    function goOnSpecificPage(num) {
+        pageNum = num;
+        queueRenderPage(pageNum);
+    }
+    /**
+     * Displays next page.
+     */
+    function onNextPage() {
+        if (pageNum >= pdfDoc.numPages) {
+            return;
+        }
+        pageNum++;
+        queueRenderPage(pageNum);
+    }
+    $('#next').on('click', onNextPage);
+
+    $('.page_column').click(function (e) {
+        var num_page = $(e.target).text();
+        if (isNaN(num_page)) {
+            $("#find_page").val("");
+            return false;
+        } else {
+            pageNum = num_page;
+            loadPdf(url);
+        }
+    });
+
+
+</script>
+<!-- Script concernant le Nice Edit-->
+<script>
+    var area;
+
+    function toggleArea() {
+        area = new nicEditor({fullPanel: true}).panelInstance('correction_demande', {hasPanel: true});
+//            area.removeInstance('correction_demande');
+    }
+    $(document).on('ready page:load', function () {
+        toggleArea();
+    });
+
+    bkLib.onDomLoaded(function () {
+        toggleArea();
+    });
+</script>
+<!--Script concernant les navigations sur les lignes-->
+<script>
+    function goToSpecificLine(page, ligne) {
+        goToSpecificPage(page);
+//        console.log("Ligne: " + ligne);
+        document.addEventListener("pageRendered", function (e) {
+            var element = $(".textLayer")[0];
+            rangy.deserializeSelection(ligne, element);
+
+
+//            var sel = rangy.getSelection();
+//            var anchorNode = sel.anchorNode;
+//            if (anchorNode) {
+//                if (anchorNode.nodeType != 1) {
+//                    anchorNode = anchorNode.parentNode;
+//                }
+//                anchorNode.scrollIntoView();
+//            }
+//
+            var selectionRange = window.getSelection();
+            selectionRange.removeAllRanges();
+        });
+    }
+    function goToSpecificWord(page, ligne,action) {
+        setAction(action);
+        goToSpecificPage(page);
+//        console.log("Ligne: " + ligne);
+        $("#corrections-spaces").hide("fast");
+        document.addEventListener("pageRendered", function (e) {
+            var element = $(".textLayer")[0];
+            rangy.deserializeSelection(ligne, element);
+            colorThem(action);
+
+
+//            var sel = rangy.getSelection();
+//            var anchorNode = sel.anchorNode;
+//            if (anchorNode) {
+//                if (anchorNode.nodeType != 1) {
+//                    anchorNode = anchorNode.parentNode;
+//                }
+//                anchorNode.scrollIntoView();
+//            }
+//
+//            var selectionRange = window.getSelection();
+//            selectionRange.removeAllRanges();
+        });
+    }
+</script>
+<!--Script concernant la coloration des reponses-->
+<script>
+  function colorThem(action){
+      console.log("## in colorThem ##");
+      var selectionRange = window.getSelection();
+      var range = selectionRange.getRangeAt(0);
+      document.designMode = "on";
+      if (range) {
+          selectionRange.removeAllRanges();
+          selectionRange.addRange(range);
+      }
+      // Colorize text
+      var my_color = [];
+      my_color[0] = "yellow";
+      my_color[1] = "red";
+      my_color[2] = "green";
+      my_color[3] = "gray";
+      my_color[4] = "grey";
+      document.execCommand("BackColor", false, my_color[action]);
+      document.execCommand("ForeColor", false, "black");
+      // Set design mode to off
+      document.designMode = "off";
+      selectionRange.removeAllRanges();
+      console.log("## fin colorThem ##");
+  }
+
+</script>

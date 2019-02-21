@@ -1,0 +1,132 @@
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-lg-12 text-left" style="margin-bottom: 35px; max-height: 15px;">
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-12 col-lg-12 text-left">
+        <%= link_to 'Accueil', projects_path, class: "link" %>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 col-lg-12 text-right">
+        <%= form_for(@sess) do |f| %>
+            <%= f.hidden_field :user_id, :value=>current_user.id %>
+            <%= f.hidden_field :project_id, :value=>@project.id %>
+            <%= f.submit "Fermer session", class: "btn btn-default" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-4 col-sm-4 col-lg-4 text-left">
+    <b>Dossier:</b><%= @project.name %>
+  </div>
+  <div class="col-lg-4 col-md-4 col-sm-4 col-lg-4 text-center">
+  </div>
+  <div class="col-lg-4 col-md-4 col-sm-4 col-lg-4 text-center">
+    <b>Auteur: </b> <%= current_user.prenom.capitalize + " " + current_user.nom.upcase %>
+  </div>
+  <div class="col-lg-12 col-md-12 col-sm-12 col-lg-12 text-right" style="margin-top: 25px; min-height: 400px">
+    <div class="row">
+      <div id="custom_message" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+
+      </div>
+      <%= form_for @correction, remote: :true do |f| %>
+          <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            <div id="action-buttons" class="row" data-toggle="buttons">
+
+              <% if @correction.action == "modification" %>
+                  <%= label_tag("Modification", class: "btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12 active", :style => "margin-top: 5px", :onclick => "manageAction(0)") do %>
+                      <%= f.radio_button(:action, "modification", :checked => "checked", :class => "required") %>
+                      Modification
+                  <% end %>
+              <% else %>
+                  <%= label_tag("Modification", class: "btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12", :style => "margin-top: 5px", :onclick => "manageAction(0)") do %>
+                      <%= f.radio_button(:action, "modification", :class => "required") %>Modification
+                  <% end %>
+              <% end %>
+              <% if @correction.action == "suppression" %>
+                  <%= label_tag("Suppression", class: "btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12 active", :style => "margin-top: 5px", :onclick => "manageAction(1)") do %>
+                      <%= f.radio_button(:action, "suppression", :checked => "checked", :class => "required") %>
+                      Suppression
+                  <% end %>
+              <% else %>
+                  <%= label_tag("Suppression", class: "btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12", :style => "margin-top: 5px", :onclick => "manageAction(1)") do %>
+                      <%= f.radio_button(:action, "suppression", :class => "required") %>Suppression
+                  <% end %>
+              <% end %>
+
+
+
+              <% if @correction.action == "insertion" %>
+                  <%= label_tag("Insertion", class: "btn btn-default col-md-12 col-sm-12 col-xs-12 active", :style => "margin-top: 5px", :onclick => "manageAction(2)") do %>
+                      <%= f.radio_button(:action, "insertion", :checked => "checked", :class => "required") %> Insertion
+                  <% end %>
+              <% else %>
+                  <%= label_tag("Insertion", class: "btn btn-default col-md-12 col-sm-12 col-xs-12", :style => "margin-top: 5px", :onclick => "manageAction(2)") do %>
+                      <%= f.radio_button(:action, "insertion", :class => "required") %> Insertion
+                  <% end %>
+              <% end %>
+
+
+              <% if @correction.action == "remplacement" %>
+                  <%= label_tag("Remplacement", class: "btn btn-default col-md-12 col-sm-12 col-xs-12 active", :style => "margin-top: 5px", :onclick => "manageAction(3)") do %>
+                      <%= f.radio_button(:action, "remplacement", :checked => "checked", :class => "required") %>
+                      Remplacement
+                  <% end %>
+              <% else %>
+                  <%= label_tag("Remplacement", class: "btn btn-default col-md-12 col-sm-12 col-xs-12", :style => "margin-top: 5px", :onclick => "manageAction(3)") do %>
+                      <%= f.radio_button(:action, "remplacement", :class => "required") %> Remplacement
+                  <% end %>
+              <% end %>
+
+              <% if @correction.action == "commentaire" %>
+                  <%= label_tag("Commentaire", class: "btn btn-default col-md-12 col-sm-12 col-xs-12 active", :style => "margin-top: 5px", :onclick => "manageAction(4)") do %>
+                      <%= f.radio_button(:action, "commentaire", :checked => "checked", :class => "required") %>
+                      Commentaire
+                  <% end %>
+              <% else %>
+                  <%= label_tag("Commentaire", class: "btn btn-default col-md-12 col-sm-12 col-xs-12", :style => "margin-top: 5px", :onclick => "manageAction(4)") do %>
+                      <%= f.radio_button(:action, "commentaire", :class => "required") %> Commentaire
+                  <% end %>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+            <div class="row">
+              <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row">
+                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-left" style="padding-left: 50px; padding-right: 50px">
+
+                    <div class="form-group">
+                      <%= f.label "Texte avant correction" %>
+                      <%= f.text_area :avant, class: "form-control", :style => "width: 300px" %>
+                    </div>
+                    <input type="hidden" name="cat" id="cat">
+                    <%= f.hidden_field :project_id, :value => @project.id %>
+                    <%= f.hidden_field :user_id, :value => current_user.id %>
+                    <%= f.hidden_field :etat, :value => "attente" %>
+                    <div class="form-group">
+                      <%= f.label "Correction demandée" %>
+                      <%= f.text_area :demande, class: "form-control", :style => "height: 100px" %>
+                    </div>
+                    <%= f.hidden_field :page, class: "form-control" %>
+                    <div class="form-group">
+                      <%= f.hidden_field :ligne,:value=>1, class: "form-control" %>
+                    </div>
+                    <div class="form-group">
+                      <%= f.label "Description" %>
+                      <%= f.text_area :description, class: "form-control", :style => "height: 100px" %>
+                    </div>
+                    <div class="form-group text-right">
+                      <%= f.submit "Valider", class: "btn btn-default" %>
+                      <!--<a href="" onclick="annuler();return false;" class="btn btn-default">Annuler</a>-->
+                      <%= link_to "Annuler",@project,:class=>"btn btn-default" %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      <% end %>
+    </div>
+  </div>
+  <div id="corrections_space" class="col-lg-12 col-md-12 col-sm-12 col-lg-12 text-left" style="margin-top: 25px;max-height: 200px;overflow-y: scroll">
+  </div>
+</div>

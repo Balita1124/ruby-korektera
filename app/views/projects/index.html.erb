@@ -1,0 +1,28 @@
+<% provide(:title, 'Tableau de bord') %>
+
+<div class="principal">
+  <table class="tableau">
+    <tr>
+      <td style="width: 150px"></td>
+      <td style="width: 250px"></td>
+      <td style="width: 100px">
+        <% if current_user.groupe == 1 %>
+            <%= link_to "Nouveau", new_project_path, :class => "link-new" %>
+        <% end %></td>
+    </tr>
+    <tr class="titre">
+      <td style="width: 150px">Projets</td>
+      <td style="width: 250px">Description</td>
+      <td style="width: 100px"></td>
+    </tr>
+    <% @projects.each do |projet| %>
+        <tr class="donnees">
+          <td><%= link_to projet.name, projet, :class => "link"%></td>
+          <td>
+            Créé le <%= projet.created_at.strftime("%d %b %Y") %> par <%= projet.user.nom %>
+          </td>
+          <td class="action"><%= link_to "Supprimer", projet, :class => "link-danger", method: :delete, data: {confirm: 'Vous etes sur??'} if current_user.groupe == 1 %></td>
+        </tr>
+    <% end %>
+  </table>
+</div>

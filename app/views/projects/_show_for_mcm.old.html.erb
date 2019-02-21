@@ -1,0 +1,145 @@
+<div id="pdf_space">
+  <div class="pdf_controller">
+    <input type="text" name="num_page" id="find_page" style="width: 35px">
+    <button id="find" class="pdf-btn" onclick="find_page()">Aller</button>
+    &nbsp; &nbsp;
+    <button id="prev" class="pdf-btn"> << </button>
+    <button id="next" class="pdf-btn"> >> </button>
+    &nbsp; &nbsp;
+    <span class="numero">Page: <span id="page_num"></span> sur <span id="page_count"></span></span>
+  </div>
+</div>
+<div id="conteneur" oncontextmenu="return false;">
+</div>
+<div id="corrections-list">
+  Liste des corrections
+</div>
+<%= javascript_include_tag 'pdf.worker' %>
+<script type="text/javascript">
+    var pageNum = 6;
+    var pdfDoc = null;
+    var pageRendering = false;
+    var pageNumPending = null;
+
+    var url = "<%= @project.fichier.url %>";
+    $(function () {
+        loadPdf(url);
+    });
+
+    function loadPdf(url) {
+        PDFJS.getDocument(url).then(function (pdf) {
+            pdfDoc = pdf;
+            pageRendering = false;
+
+            var container = document.getElementById("conteneur");
+            pdf.getPage(pageNum).then(function (page) {
+
+                var scale = 1.5;
+                var viewport = page.getViewport(scale);
+                var div = document.createElement("div");
+                div.setAttribute("id", "page-" + (page.pageIndex + 1));
+                div.setAttribute("style", "position: relative");
+                container.innerHTML="";
+                container.appendChild(div);
+                var canvas = document.createElement("canvas");
+                div.appendChild(canvas);
+
+                var context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+
+                page.render(renderContext)
+                        .then(function () {
+                            return page.getTextContent();
+                        })
+                        .then(function (textContent) {
+                            pageRendering = false;
+                            var textLayerDiv = document.createElement("div");
+                            textLayerDiv.setAttribute("class", "textLayer");
+//                            textLayerDiv.setAttribute("style", "width:"+canvas.width);
+                            div.appendChild(textLayerDiv);
+                            var numero = page.pageIndex;
+                            if (pageNumPending !== null) {
+                                // New page rendering is pending
+                                numero = pageNumPending;
+
+                            }
+                            pageNumPending = null;
+                            var textLayer = new TextLayerBuilder({
+                                textLayerDiv: textLayerDiv,
+                                pageIndex: numero,
+                                viewport: viewport
+                            });
+                            textLayer.setTextContent(textContent);
+                            textLayer.render();
+                        });
+            });
+            $('#page_num').text(pageNum);
+            $("#find_page").val(pageNum);
+            $('#page_count').text(pdf.numPages);
+            $('#page_num').text(pageNum);
+        });
+    }
+    function goto_page(num) {
+        pageNum = num;
+        loadPdf(url);
+    }
+    function find_page() {
+        var num_page = $("#find_page").val();
+        if (isNaN(num_page)) {
+            $("#find_page").val("");
+            return false;
+        } else {
+            pageNum = num_page;
+            loadPdf(url);
+        }
+    }
+    function queueRenderPage(num) {
+        if (pageRendering) {
+            pageNumPending = num;
+        } else {
+//            renderPage(num);
+            loadPdf(url);
+        }
+    }
+    /**
+     * Displays previous page.
+     */
+    function onPrevPage() {
+        if (pageNum <= 1) {
+            return;
+        }
+        pageNum--;
+        queueRenderPage(pageNum);
+    }
+    $('#prev').on('click', onPrevPage);
+
+    /**
+     * Displays next page.
+     */
+    function onNextPage() {
+        if (pageNum >= pdfDoc.numPages) {
+            return;
+        }
+        pageNum++;
+        queueRenderPage(pageNum);
+    }
+    $('#next').on('click', onNextPage);
+
+    $('.page_column').click(function (e) {
+        var num_page = $(e.target).text();
+        if (isNaN(num_page)) {
+            $("#find_page").val("")
+            return false;
+        } else {
+            pageNum = num_page;
+            loadPdf(url);
+        }
+    });
+</script>
+

@@ -1,0 +1,14 @@
+<div class="banner">
+  <%= link_to 'ICA', projects_path %>
+</div>
+<% if !current_user.nil? %>
+    <div class="session">
+      <div class="name">
+        <%= link_to "#{current_user.prenom.capitalize} #{current_user.nom.upcase}", utilisateur_path(current_user.id) %>
+        (<%= groupe(current_user.id) %>)
+      </div>
+      <div class="deconnexion">
+        <%= link_to "Deconnexion", destroy_user_session_path, :method => :delete %>
+      </div>
+    </div>
+<% end %>

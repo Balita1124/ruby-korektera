@@ -1,0 +1,54 @@
+<% provide(:title, "S'inscrire") %>
+
+<div class="col-lg-4 col-md-3 col-sm-2 hidden-xs"></div>
+<div class="devise col-lg-4 col-md-6 col-sm-8 col-xs-12">
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= devise_error_messages! %>
+      <div class="form-group">
+        <div class="row">
+          <div class="btn-group col-md-10 col-sm-12 col-xs-12 col-md-offset-2 col-xs-offset-0 col-sm-offset-0" data-toggle="buttons">
+            <%= label_tag( "Auteur", class: "btn btn-default active col-md-5 col-sm-6 col-xs-6") do %>
+                <%= f.radio_button(:groupe, 2, checked: "checked",:class=>"required") %> Auteur
+            <% end %>
+
+            <%= label_tag( "MCM", class: "btn btn-default col-md-5 col-sm-6 col-xs-6") do %>
+                <%= f.radio_button(:groupe, 1,:class=>"required") %> MCM
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <%= f.label "Nom" %>
+        <%= f.text_field :nom, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label "Prenom" %>
+        <%= f.text_field :prenom, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :email %>
+        <%= f.email_field :email, class: "form-control" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label "Mot de passe" %>
+        <% if @minimum_password_length %>
+            <em>(<%= @minimum_password_length %> characters minimum)</em>
+        <% end %><br/>
+        <%= f.password_field :password, class: "form-control", autocomplete: "off" %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label "Confirmation" %>
+        <%= f.password_field :password_confirmation, class: "form-control", autocomplete: "off" %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit "S'inscrire", class: "btn btn-default" %>
+      </div>
+  <% end %>
+  <%= link_to "Se connecter", new_session_path(resource_name) ,class: "link" %>
+</div>
+<div class="col-lg-4 col-md-3 col-sm-2 hidden-xs"></div>

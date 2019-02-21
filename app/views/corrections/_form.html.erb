@@ -1,0 +1,29 @@
+<%= form_for(@correction) do |f| %>
+  <% if @correction.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@correction.errors.count, "error") %> prohibited this correction from being saved:</h2>
+
+      <ul>
+      <% @correction.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :avant %><br>
+    <%= f.text_field :avant %>
+  </div>
+  <div class="field">
+    <%= f.label :demande %><br>
+    <%= f.text_field :demande %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_area :description %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,24 @@
+
+<% if !@correction.errors.any? %>
+    $(".custom_error").html("");
+    $("#corrections-spaces").html("<%= escape_javascript(render 'corrections/corrections') %>");
+    $("#corrections-list-btn").html("<%= escape_javascript(render 'corrections/corrections_stat') %>");
+    $("#custom_message").html("<%= escape_javascript(render 'projects/custom_succes') %>");
+    $("#custom_message").css("border","3px solid green");
+    $("#custom_message").show();
+    resetAll();
+<% else %>
+    $("#custom_message").html("<%= escape_javascript(render 'projects/custom_error') %>");
+    $("#custom_message").css("border","3px solid #FF0000");
+    $("#custom_message").show();
+<% end %>
+
+
+function resetAll(){
+    $("#correction_avant").val("");
+    $("#correction_demande").val("");
+    $("#correction_ligne").val("");
+    $("#correction_description").val("");
+    $("#correction_view_line").val("");
+    $(".nicEdit-main").text("");
+}

@@ -1,0 +1,34 @@
+<table class="tableau">
+  <tr>
+    <td style="width: 150px"></td>
+    <td style="width: 200px"></td>
+    <td style="width: 100px"></td>
+    <td style="width: 100px"></td>
+    <td style="width: 100px">
+      <%= link_to "Nouveau", new_utilisateur_path, :class => "link-new" %>
+    </td>
+  </tr>
+  <tr class="titre">
+    <td style="width: 150px">Nom</td>
+    <td style="width: 20px">Prenom</td>
+    <td style="width: 100px">Role</td>
+    <td style="width: 100px"></td>
+    <td style="width: 100px"></td>
+  </tr>
+  <% @utilisateurs.each do |utilisateur| %>
+      <tr class="donnees">
+        <td><%= utilisateur.nom %></td>
+        <td>
+          <%= utilisateur.prenom %>
+        </td>
+        <td>
+          <%= groupe(utilisateur.id) %>
+        </td>
+        <td class="action"><%= link_to "Modifier", edit_utilisateur_path(utilisateur), :class => "link-edit" %></td>
+        <td class="action"><%= link_to "Supprimer", utilisateur_path(utilisateur), :class => "link-danger", method: :delete, data: {confirm: 'Vous etes sur??'} %></td>
+      </tr>
+  <% end %>
+</table>
+<%= custom_will_paginate @utilisateurs, :style => 'color:#075769',
+                         :params => {:controller => 'utilisateurs', :action => 'index'},
+                         :remote => true %>
