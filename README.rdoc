@@ -1,4 +1,4 @@
 mcm ====> 1
 auteur =====> 2
 
-tat = {0=>"En attente",1=>"Corrigé",2=>"Verifier"}
+etat = {0=>"En attente",1=>"Corrigé",2=>"Verifier"}
