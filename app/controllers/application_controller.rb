@@ -8,10 +8,13 @@ class ApplicationController < ActionController::Base
   layout :layout_by_resource
 
   def devise_permitted_parameters
-    devise_parameter_sanitizer.
-        for(:sign_in) { |user| user.permit(:email, :password, :nom, :prenom, :groupe) }
-    devise_parameter_sanitizer.
-        for(:sign_up) { |user| user.permit(:email, :password, :nom, :prenom, :groupe) }
+    # devise_parameter_sanitizer.
+    #     for(:sign_in) { |user| user.permit(:email, :password, :nom, :prenom, :groupe) }
+    # devise_parameter_sanitizer.
+    #     for(:sign_up) { |user| user.permit(:email, :password, :nom, :prenom, :groupe) }
+
+    devise_parameter_sanitizer.permit(:sign_in, keys: [:email, :password, :nom, :prenom, :groupe])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :password, :nom, :prenom, :groupe])
   end
 
   def admin?
