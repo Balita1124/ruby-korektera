@@ -1,4 +1,13 @@
-mcm ====> 1
-auteur =====> 2
 
-etat = {0=>"En attente",1=>"Corrigé",2=>"Verifier"}
+# KOREKTERA
+
+## Présentation
+**Korektera** est une applicaton web permettant d'effectuer des corrections automatiques.
+## Techno utilisées
+
+ - Ruby
+ - Ruby on rails
+ - Postgresql
+ - HTML5/CSS3/JAVASCRIPT
+ - Ajax
+ - Pdf.js
