@@ -1,8 +1,9 @@
-
 # KOREKTERA
 
 ## Présentation
-**Korektera** est une applicaton web permettant d'effectuer des corrections automatiques.
+
+*Korektera* est une applicaton web permettant d'effectuer des corrections automatiques.
+
 ## Techno utilisées
 
  - Ruby
