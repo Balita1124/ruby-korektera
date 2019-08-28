@@ -1,10 +1,10 @@
-# KOREKTERA
+#KOREKTERA
 
-## Présentation
+##Présentation
 
 *Korektera* est une applicaton web permettant d'effectuer des corrections automatiques.
 
-## Techno utilisées
+##Techno utilisées
 
  - Ruby
  - Ruby on rails
